@@ -37,7 +37,7 @@ VALUES ("Elliot", "Smith", 1),
         ("Edmond", "James", 12);
     
 -- INSERT INTO employees (first_name, last_name, role_id, manager_id)
--- VALUES ("Elliot", "Smith", 1, NULL),
+-- VALUES ("Elliot", "Smith", 1),
 --        ("Amira", "Afzal", 2, 3),
 --        ("Christoper", "Lee", 3, NULL),
 --        ("Verónica", "Rodriguez", 4, NULL),
