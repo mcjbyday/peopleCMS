@@ -17,6 +17,8 @@
   },
   "homepage": "https://github.com/mcjbyday/peopleDB#readme",
   "dependencies": {
-    "inquirer": "^8.2.4"
+    "inquirer": "^8.2.4",
+    "mysql2": "^2.3.3",
+    "tab": "^1.0.0"
   }
 }

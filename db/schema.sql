@@ -34,10 +34,10 @@ CREATE TABLE employees (
     REFERENCES roles(roleId)
     ON DELETE CASCADE,
     -- to hold reference to another employee that is the manager of the current employee (null if the employee has no manager)
-    manager_id INT DEFAULT NULL,
+    manager_id INT,
     FOREIGN KEY (manager_id)
     REFERENCES employees(employeeId)
-    ON DELETE SET NULL
+    ON DELETE CASCADE
 );
 
 
@@ -66,30 +66,18 @@ VALUES ("Marketing Manager", 92500.00, 1),
        ("Cloud Engineer", 112000.00, 8),
        ("Data Engineer I", 88000.00, 9);
     
--- INSERT INTO employees (first_name, last_name, role_id)
--- VALUES ("Elliot", "Smith", 1),
---         ("Amira", "Afzal", 2),
---         ("Christoper", "Lee", 3),
---         ("Verónica", "Rodriguez", 4),
---         ("Mikaila", "Young", 6),
---         ("Farah", "Wilson", 5),
---         ("Cake", "Fontaine", 10),
---         ("Maxwell", "Dixon", 10),
---         ("Mary", "Kugol", 11),
---         ("Edmond", "James", 12);
-    
+-- MANAGER_IDs must reference employee rows that have already been defined
 INSERT INTO employees (first_name, last_name, role_id, manager_id)
-VALUES ("Elliot", "Smith", 1),
+VALUES ("Elliot", "Smith", 1, NULL),
+       ("Christoper", "Lee", 3, NULL),
        ("Amira", "Afzal", 2, 3),
-       ("Christoper", "Lee", 3),
-       ("Verónica", "Rodriguez", 4),
+       ("Verónica", "Rodriguez", 4, NULL),
+       ("Farah", "Wilson", 5, NULL),
        ("Mikaila", "Young", 6, 6),
-       ("Farah", "Wilson", 5),
-       ("Cake", "Fontaine", 10),
+       ("Cake", "Fontaine", 10, NULL),
        ("Maxwell", "Dixon", 10, 7),
        ("Mary", "Kugol", 11, 7),
        ("Edmond", "James", 12, 7);
        
-SELECT * FROM employees;
+-- SELECT * FROM employees;
 
--- Error Code: 1452. Cannot add or update a child row: a foreign key constraint fails (`employees_db`.`employees`, CONSTRAINT `employees_ibfk_2` FOREIGN KEY (`manager_id`) REFERENCES `employees` (`employeeId`) ON DELETE SET NULL)
