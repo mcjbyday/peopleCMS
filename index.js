@@ -1,6 +1,5 @@
 const { prompt } = require("inquirer");
 const mysql = require('mysql2/promise');
-const Employee = require("./lib/Employee");
 const mod_tab = require('tab');
 let db; // global to be made accesible by inquirer functions
 
