@@ -1,6 +1,7 @@
 const { prompt } = require("inquirer");
 const mysql = require('mysql2/promise');
 const mod_tab = require('tab');
+const cTable = require('console.table');
 let db; // global to be made accesible by inquirer functions
 
 console.log(`
@@ -102,143 +103,30 @@ async function mainMenuOptions() {
 async function viewAllDepts() {
     
     const [seeDepartments] = await db.execute("SELECT * FROM departments");    
-    await viewAllDeptsConsole(seeDepartments);
+    await console.table(cTable.getTable(seeDepartments));
     await mainMenuOptions();
    
 }
-// view departments display formatting
-async function viewAllDeptsConsole(myList) {
-    let employeesFullNameList = myList.map((department)=>(department.deptId));
-    let myListCol2 = myList.map((department)=>(department.department_name));
-    let arrNew = [];
-    let objNew = [];
-    
-    for (let i = 0; i < employeesFullNameList.length; i++) {
-        
-        objNew = [employeesFullNameList[i], myListCol2[i]];
-        arrNew.push(objNew)
-    
-    }
-    // console.log(arrNew);
-    mod_tab.emitTable({
-        'columns': [{
-            'label': 'ID',
-            'align': 'left',
-            'width': 6
-        }, {
-            'label': 'Department name',
-            'align': 'left',
-            'width': 10
-        }],
-        'rows': arrNew
-      });
-}
+
 // view roles query
 async function viewAllRoles() {
     
-    const [seeRoles] = await db.execute("SELECT * FROM roles");    
-    await viewAllRolesConsole(seeRoles);
+    const [seeRoles] = await db.execute(`SELECT roles.title AS Title, departments.department_name AS Departments, roles.salary AS Salary FROM roles 	JOIN (SELECT * FROM DEPARTMENTS) AS Departments ON roles.department_id = departments.deptId`);    
+    await console.table(cTable.getTable(seeRoles));
     await mainMenuOptions();
    
 }
-// view departments display formatting
-async function viewAllRolesConsole(myList) {
-    
-    let employeesFullNameList = myList.map((role)=>(role.roleId));
-    let myListCol2 = myList.map((role)=>(role.title));
-    let myListCol3 = myList.map((role)=>(role.salary));
-    let myListCol4 = myList.map((role)=>(role.department_id));
 
-    let arrNew = [];
-    let objNew = [];
-    
-    for (let i = 0; i < employeesFullNameList.length; i++) { 
-        objNew = [employeesFullNameList[i], myListCol2[i], myListCol3[i], myListCol4[i]];
-        arrNew.push(objNew)
-    }
-    // console.log(arrNew);
-    mod_tab.emitTable({
-        'columns': [{
-            'label': 'ID',
-            'align': 'left',
-            'width': 6
-        }, {
-            'label': 'Title',
-            'align': 'left',
-            'width': 35
-        }, {
-            'label': 'Salary',
-            'align': 'left',
-            'width': 10
-        },
-        {
-            'label': 'Department ID',
-            'align': 'left',
-            'width': 6
-        }],
-        'rows': arrNew
-      });
-}
-   
 // view employees query
 async function viewAllEmployees() {
     
-    const [seeEmployees] = await db.execute("SELECT * FROM employees");    
-    await viewAllEmployeesConsole(seeEmployees);
+    const [seeEmployees] = await db.execute(`
+    SELECT employees.employeeId, employees.first_name AS FirstName, employees.last_name AS LastName, roles.title AS Title, departments.department_name AS Departments, roles.salary AS Salary, concat(Managers.first_name, " ",Managers.last_name) AS Managers FROM employees LEFT JOIN roles ON employees.role_id = roles.roleId JOIN (SELECT * FROM DEPARTMENTS) AS Departments ON roles.department_id = departments.deptId LEFT JOIN (SELECT * FROM EMPLOYEES) AS Managers ON employees.manager_id = Managers.employeeId;`);    
+    await console.table(cTable.getTable(seeEmployees));
     await mainMenuOptions();
    
 }
-// view employees display formatting
-async function viewAllEmployeesConsole(myList) {
-    let employeesFullNameList = myList.map((employee)=>(employee.employeeId));
-    let myListCol2 = myList.map((employee)=>(employee.first_name));
-    let myListCol3 = myList.map((employee)=>(employee.last_name));
-    let myListCol4 = myList.map((employee)=>(employee.role_id));
-    let myListCol5 = myList.map((employee)=> {
-        let mgrid = String(employee.manager_id);
-        if (mgrid) {
-            return mgrid;
-        }
-        else {
-            return "None";
-        }
-        });
-
-    let arrNew = [];
-    let objNew = [];
     
-    for (let i = 0; i < employeesFullNameList.length; i++) { 
-        objNew = [employeesFullNameList[i], myListCol2[i], myListCol3[i], myListCol4[i], myListCol5[i]];
-        arrNew.push(objNew)
-    }
-    // console.log(arrNew);
-    mod_tab.emitTable({
-        'columns': [{
-            'label': 'ID',
-            'align': 'left',
-            'width': 6
-        }, {
-            'label': 'First Name',
-            'align': 'left',
-            'width': 15
-        }, {
-            'label': 'Last Name',
-            'align': 'left',
-            'width': 15
-        },
-        {
-            'label': 'Role ID',
-            'align': 'left',
-            'width': 10
-        },
-        {
-            'label': 'Manager ID',
-            'align': 'left',
-            'width': 6
-        }],
-        'rows': arrNew
-      });
-}
 // add new department name
 async function addDepartment() {
     
