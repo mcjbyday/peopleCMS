@@ -7,7 +7,32 @@ let db; // global to be made accesible by inquirer functions
 // const Employee = require('./lib/Employee');
 // const Role = require('./lib/Role');
 
+// console.log(`
+//     MMMMMMMMMMMMN0kKNWMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMWXNNMMMMMMMMMMMMMMMMMMMMM
+//     MMMMMMMMMMMMXc..;:cokKWMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM0,cNMMMMMMMMMMMMMMMMMMMMM
+//     MMMMMMMMMMMMMk.;kOxoc:cOWMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMO,oWMMMMMMMMMMMMMMMMMMMMM
+//     MMMMMMMMMMMMWo.;dxdol,.oNMNOlcclOWWXkolllokKWMNklcokXMMO,dWMMNklcco0WMMMMMMMMMMM
+//     MMMMMMMMMMMMK;.;clodxOKWM0:.,o:.;KO,.;dkxdc;dKl .;l;;OWk,xMWO,.;o;.:XMMMMMMMMMMM
+//     MMMMMMMMMMMMO.:XMMMMMMMMK;'cc::cOWk.;KMMWNO,;o' 'OWO.;Xx'xMO,,lc::cOWMMMMMMMMMMM
+//     MMMMMMMMMMMMk'cNMMMMMMMMO',ONNNWWXKo;colllco0x.';;c::xNO,lNk.;0NNNWNNWMMMMMMMMMM
+//     MMMMMMMMMMMMNKXWMMMMMMMMWOc;cllcclONNK00KXNMMk'oNK0KNMMWKKWWk:;clllcl0WMMMMMMMMM
+//     MMMMMMMMMMMMMMMMMMMMMMMMMMWXOkkOKNWMMMMMMMMMMO,lWMMMMMMMMMMMMWKOkkOKNWMMMMMMMMMM
+//     MMMMMMN0KWMWXXWMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMXc,0MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
+//     MMMMMMx..xW0;'kWMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
+//     MMMMMNc  ,kl  lWMMMMWNNWWMMMMMWWMNKXMMMMMMWNNWMMMMMMMMMMMMMMMMMN0kOKWMMNkdox0NMM
+//     MMMMWk.':.....cNMWKdcllcoKMMMKldx:.,kWW0docllcxXMMMWKxlcxXWWMXd;:c;'dNK:.:llcoKM
+//     MMMWO,.kXd'ck;,KWk;:OX0; ,OWMO..,ox,:0d,,l0Xx. cXMNd',dkkxcoO:.':c,'dNo.oWMMWXNM
+//     MMMO'.xWMWNWWd.dNd.:dl;:l;,o0x.;0WWo,dc.;ldc;cl,;x0o.,loc..xo.l0kdkKWWl.oWMMMMMM
+//     MMMXxOWMMMMMMXc;ONklloONMNklkK0XMMMXk0Kdllld0WWKdo0N0xdd:.lN0:'lk0OkdoolOWMMMMMM
+//     MMMMMMMMMMMMMMNKXMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMWo,OMMNkocclloxXMMMMMMMMM
+//     MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMNdlO0;:XMMMMMMWMMMMMMMMMMMMMM
+//     MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMNx;'.'kWMMMMMMMMMMMMMMMMMMMMM
+//     MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMWKkKWMMMMMMMMMMMMMMMMMMMMMM
+//     `)
+
+//initialize code by signing in to database
 async function init() {
+
 // Connect to database
     db = await mysql.createConnection(
         {
@@ -21,6 +46,8 @@ async function init() {
         // console.log(`Connected to the employees_db database.`)
     );
 }
+
+//initialize main menu option list
 let mainMenuOptionList = [
     "View all departments", 
     "View all roles", 
@@ -31,7 +58,7 @@ let mainMenuOptionList = [
     "Update an employee role",
     "Exit"
 ];
-
+// display and selection of main menu
 async function mainMenuOptions() {
     await init();
     
@@ -53,15 +80,15 @@ async function mainMenuOptions() {
         case "View all employees": 
             viewAllEmployees();
             break;
-    //     case "Add a department":
-    //         addDepartment();
-    //         break; 
+        case "Add a department":
+            addDepartment();
+            break; 
     //     case "Add a role":
     //         addRole();
     //         break; 
-    //     case "Add an employee":
-    //         addEmployee();
-    //         break; 
+        case "Add an employee":
+            addEmployee();
+            break; 
     //     case "Update an employee role":
     //         updateEmployee();
     //         break;
@@ -75,10 +102,7 @@ async function mainMenuOptions() {
     // console.log(mainMenuSelection);
     
 }
-
-// WHEN I choose to view all departments
-// THEN I am presented with a formatted table showing department names and department ids
-
+// view departments query
 async function viewAllDepts() {
     
     const [seeDepartments] = await db.execute("SELECT * FROM departments");    
@@ -86,16 +110,16 @@ async function viewAllDepts() {
     await mainMenuOptions();
    
 }
-
+// view departments display formatting
 async function viewAllDeptsConsole(myList) {
-    let myListCol1 = myList.map((department)=>(department.deptId));
+    let employeesFullNameList = myList.map((department)=>(department.deptId));
     let myListCol2 = myList.map((department)=>(department.department_name));
     let arrNew = [];
     let objNew = [];
     
-    for (let i = 0; i < myListCol1.length; i++) {
+    for (let i = 0; i < employeesFullNameList.length; i++) {
         
-        objNew = [myListCol1[i], myListCol2[i]];
+        objNew = [employeesFullNameList[i], myListCol2[i]];
         arrNew.push(objNew)
     
     }
@@ -113,7 +137,7 @@ async function viewAllDeptsConsole(myList) {
         'rows': arrNew
       });
 }
-
+// view roles query
 async function viewAllRoles() {
     
     const [seeRoles] = await db.execute("SELECT * FROM roles");    
@@ -121,10 +145,10 @@ async function viewAllRoles() {
     await mainMenuOptions();
    
 }
-
+// view departments display formatting
 async function viewAllRolesConsole(myList) {
     
-    let myListCol1 = myList.map((role)=>(role.roleId));
+    let employeesFullNameList = myList.map((role)=>(role.roleId));
     let myListCol2 = myList.map((role)=>(role.title));
     let myListCol3 = myList.map((role)=>(role.salary));
     let myListCol4 = myList.map((role)=>(role.department_id));
@@ -132,8 +156,8 @@ async function viewAllRolesConsole(myList) {
     let arrNew = [];
     let objNew = [];
     
-    for (let i = 0; i < myListCol1.length; i++) { 
-        objNew = [myListCol1[i], myListCol2[i], myListCol3[i], myListCol4[i]];
+    for (let i = 0; i < employeesFullNameList.length; i++) { 
+        objNew = [employeesFullNameList[i], myListCol2[i], myListCol3[i], myListCol4[i]];
         arrNew.push(objNew)
     }
     // console.log(arrNew);
@@ -160,7 +184,7 @@ async function viewAllRolesConsole(myList) {
       });
 }
    
-
+// view employees query
 async function viewAllEmployees() {
     
     const [seeEmployees] = await db.execute("SELECT * FROM employees");    
@@ -168,9 +192,9 @@ async function viewAllEmployees() {
     await mainMenuOptions();
    
 }
-
+// view employees display formatting
 async function viewAllEmployeesConsole(myList) {
-    let myListCol1 = myList.map((employee)=>(employee.employeeId));
+    let employeesFullNameList = myList.map((employee)=>(employee.employeeId));
     let myListCol2 = myList.map((employee)=>(employee.first_name));
     let myListCol3 = myList.map((employee)=>(employee.last_name));
     let myListCol4 = myList.map((employee)=>(employee.role_id));
@@ -187,8 +211,8 @@ async function viewAllEmployeesConsole(myList) {
     let arrNew = [];
     let objNew = [];
     
-    for (let i = 0; i < myListCol1.length; i++) { 
-        objNew = [myListCol1[i], myListCol2[i], myListCol3[i], myListCol4[i], myListCol5[i]];
+    for (let i = 0; i < employeesFullNameList.length; i++) { 
+        objNew = [employeesFullNameList[i], myListCol2[i], myListCol3[i], myListCol4[i], myListCol5[i]];
         arrNew.push(objNew)
     }
     // console.log(arrNew);
@@ -219,64 +243,72 @@ async function viewAllEmployeesConsole(myList) {
         'rows': arrNew
       });
 }
-
-
-
-// async function addDepartment() {
-//     await init();
+// add new department name
+async function addDepartment() {
     
-//     const {department_name} = await prompt([
-//         {
-//             type: 'input',
-//             message: "What is the name of the department you'd like to add?",
-//             name: 'department_name',
-//         },
-//     ]);
+    const {department_name} = await prompt([
+        {
+            type: 'input',
+            message: "What is the name of the department you'd like to add?",
+            name: 'department_name',
+        },
+    ]);
 
-//     await db.execute(`INSERT INTO departments (department_name)
-//     VALUES (${department_name});`);
-//     console.log(department_name);
+    await db.execute(`INSERT INTO departments (department_name) VALUES ("${department_name}");`);
+    // console.log(department_name);
 
-//     await mainMenuOptions();
+    await mainMenuOptions();
+}
 
-// }
-
-// async function addEmployee() {
-//     await init();
+async function addEmployee() {
     
-//     let {first_name, last_name, role_id, manager_id} = await prompt([
-//         {
-//             type: 'input',
-//             message: "What is their first name?",
-//             name: 'first_name',
-//         },
-//         {
-//             type: 'input',
-//             message: "What is their last name?",
-//             name: 'last_name',
-//         },
-//         {
-//             type: 'input',
-//             message: "What is their role ID number?",
-//             name: 'role_id',
-//         },
-//         {
-//             type: 'input',
-//             message: "If you know their manager's employee ID, provide it here, otherwise hit enter.",
-//             name: 'employee_id',
-//         }
-//     ]);
-//     // await async () => {
-//     //     if (manager_id == " " || manager_id == "") {
-//     //         manager_id = NULL;
-//     //     }    
-//     // }
-//     await db.execute(`INSERT INTO employees (first_name, last_name, role_id, manager_id)
-//     VALUES ("${first_name}", "${last_name}", ${role_id}, ${manager_id});`);
-
-//     console.log(departmentSelection);
-//     await mainMenuOptions();
-// }
+    const [roles] = await db.execute("SELECT * FROM roles");
+    const [employees] = await db.execute("SELECT * FROM employees");
+    // console.log(employees);
+    const nullBoi = {
+        employeeId: null,
+        first_name: "None",
+        last_name: "",
+        role_id: null,
+        manager_id: null
+    }
+    employees.unshift(nullBoi)
+    
+    let {first_name, last_name, roleSelection, mgrSelection} = await prompt([
+        {
+            type: 'input',
+            message: "What is their first name?",
+            name: 'first_name',
+        },
+        {
+            type: 'input',
+            message: "What is their last name?",
+            name: 'last_name',
+        },
+        {
+            type: 'list',
+            name: 'roleSelection',
+            message: 'What is their role?',
+            choices: roles.map((role) => ({name:role.title, value: role}))
+        },
+        {
+            type: 'list',
+            name: 'mgrSelection',
+            message: 'Who is their manager?',
+            choices: employees.map((employee)=>({name:`${employee.first_name} ${employee.last_name}`, value: employee}))
+        }
+    ]);
+    
+    // const newEmployeeRole = await db.execute(`SELECT title from EMPLOYEES WHERE employeeId = ${mgrSelection}`) 
+    if (mgrSelection.first_name !== "None") {
+        await db.execute(`INSERT INTO employees (first_name, last_name, role_id, manager_id) VALUES ("${first_name}","${last_name}", "${roleSelection.roleId}", "${mgrSelection.employeeId}");`);
+    }
+    else {
+        await db.execute(`INSERT INTO employees (first_name, last_name, role_id, manager_id) VALUES ("${first_name}","${last_name}", "${roleSelection.roleId}", NULL);`);
+    }
+        
+    await mainMenuOptions();
+}
 
 async function runExit() {
     process.exit(0);
