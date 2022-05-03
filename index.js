@@ -89,9 +89,9 @@ async function mainMenuOptions() {
         case "Add an employee":
             addEmployee();
             break; 
-    //     case "Update an employee role":
-    //         updateEmployee();
-    //         break;
+        case "Update an employee role":
+            updateEmployee();
+            break;
          case "Exit":
             runExit();
             break;
@@ -338,29 +338,44 @@ async function addEmployee() {
     await mainMenuOptions();
 }
 
+async function updateEmployee() {
+    
+    const [roles] = await db.execute("SELECT * FROM roles");
+    const [employees] = await db.execute("SELECT * FROM employees");
+    // console.log(employees);
+    const nullBoi = {
+        employeeId: null,
+        first_name: "None",
+        last_name: "",
+        role_id: null,
+        manager_id: null
+    }
+    employees.unshift(nullBoi)
+    
+    let {employeeSelection, roleSelection} = await prompt([
+        {
+            type: 'list',
+            name: 'employeeSelection',
+            message: 'Which employee would you like to update?',
+            choices: employees.map((employee)=>({name:`${employee.first_name} ${employee.last_name}`, value: employee}))
+        },
+        {
+            type: 'list',
+            name: 'roleSelection',
+            message: 'What would you like to assign as their role?',
+            choices: roles.map((role) => ({name:role.title, value: role}))
+        }
+    ]);
+    
+    await db.execute(`UPDATE employees SET role_id = ${roleSelection.roleId} where employeeId = ${employeeSelection.employeeId};`);
+        
+    await mainMenuOptions();
+}
+
 async function runExit() {
     process.exit(0);
 };
 
-
 // // selectDepartment();
 mainMenuOptions();
 
-
-// async function selectADepartment() {
-//     await init();
-    
-//     const [departments] = await db.execute("SELECT * FROM departments");
-
-//     const {departmentSelection
-//     } = await prompt([
-//         {
-//         type: 'list',
-//         name: 'departmentSelection',
-//         message: 'Which department do you want to view?',
-//         choices: departments.map((department) => ({name:department.department_name, value: department}))
-//         }
-//     ]);
-
-//     console.log(departmentSelection);
-// }
