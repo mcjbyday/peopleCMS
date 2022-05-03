@@ -26,7 +26,7 @@ The People Manager is a command line tool that makes use of database architectur
 
 <h2 id="project-captures">Screen captures</h2>
 
-[See it live](https://drive.google.com/file/d/1c0VUhqT2cwSIA_OeN9VqeUc-RGJzFmsd/view?usp=sharing)
+[See it in action in this video](https://drive.google.com/file/d/1c0VUhqT2cwSIA_OeN9VqeUc-RGJzFmsd/view?usp=sharing)
 
 | Image | Description |
 | --- | ----------- |
