@@ -83,9 +83,9 @@ async function mainMenuOptions() {
         case "Add a department":
             addDepartment();
             break; 
-    //     case "Add a role":
-    //         addRole();
-    //         break; 
+        case "Add a role":
+            addRole();
+            break; 
         case "Add an employee":
             addEmployee();
             break; 
@@ -256,6 +256,34 @@ async function addDepartment() {
 
     await db.execute(`INSERT INTO departments (department_name) VALUES ("${department_name}");`);
     // console.log(department_name);
+
+    await mainMenuOptions();
+}
+
+async function addRole() {
+
+    const [departments] = await db.execute("SELECT * FROM departments");
+    
+    let {title, salary, departmentSelection} = await prompt([
+        {
+            type: 'input',
+            message: "What is the name of the role?",
+            name: 'title',
+        },
+        {
+            type: 'input',
+            message: "What is the salary for the role?",
+            name: 'salary',
+        },
+        {
+            type: 'list',
+            name: 'departmentSelection',
+            message: 'To which department does this role belong?',
+            choices: departments.map((department) => ({name:department.department_name, value: department}))
+        }
+    ]);
+    
+    await db.execute(`INSERT INTO roles (title, salary, department_id) VALUES ("${title}","${salary}", "${departmentSelection.deptId}");`);    
 
     await mainMenuOptions();
 }
